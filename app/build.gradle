@@ -1,0 +1,95 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        applicationId "tulaa.io.fileprocessor"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 2
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions("enviromentType")
+    productFlavors {
+        localAuto {
+            buildConfigField "String", "SERVER_URL", '\"http://' + getLocalIp("en0") + ':8080\"'
+
+        }
+
+        emulator {
+            buildConfigField("String", "SERVER_URL", '"http://10.0.2.2:8080"')
+
+        }
+
+        hardCoded {
+            buildConfigField("String", "SERVER_URL", '""http://192.168.2.7:8080"')
+
+        }
+    }
+
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+    dataBinding.enabled = true
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/rxjava.properties'
+    }
+}
+
+dependencies {
+    implementation supportDependencies.appCompat
+    implementation supportDependencies.design
+    implementation supportDependencies.gridLayout
+    implementation supportDependencies.annotations
+    implementation architectureComponentDependencies.viewModelAndLiveData
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:design:27.0.2'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    testImplementation testingDependencies.junit
+    testImplementation testingDependencies.liveDataTestHelper
+    androidTestImplementation(testingDependencies.barista) {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+}
+// Get the ip address by interface name
+def getLocalIp(String interfaceName) {
+    Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+    for (NetworkInterface net : interfaces) {
+        if (net.name.contains("bridge"))
+            continue;
+        for (InterfaceAddress address : net.getInterfaceAddresses()) {
+            String ip = address.getAddress().getHostAddress()
+            println("ip = " + ip)
+            if (ip.length() <= 15) {
+                return ip;
+            }
+        }
+    }
+}

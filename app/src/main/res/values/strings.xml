@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FileProcessor</string>
+    <string name="action_settings">Settings</string>
+    <string name="upload_successful">Successfully uploaded file</string>
+    <string name="upload_failure">Unable to upload file</string>
+    <string name="upload">Click on the upload button to upload the CSV file in the assets directory</string>
+</resources>
